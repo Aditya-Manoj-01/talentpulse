@@ -1,0 +1,60 @@
+{"id": "q01", "question": "Who must approve overtime before it is worked?", "ground_truth": "The employee's direct manager must pre-approve overtime in the HRMS portal before the hours are worked.", "source": "overtime_policy.md"}
+{"id": "q02", "question": "When is retroactive overtime approval allowed?", "ground_truth": "Only for production incidents, and it must be filed within 2 working days.", "source": "overtime_policy.md"}
+{"id": "q03", "question": "What is the weekly overtime cap?", "ground_truth": "Overtime is capped at 12 hours per week.", "source": "overtime_policy.md"}
+{"id": "q04", "question": "How many overtime hours are allowed per quarter?", "ground_truth": "50 hours per calendar quarter.", "source": "overtime_policy.md"}
+{"id": "q05", "question": "Can someone work overtime four weeks in a row?", "ground_truth": "No more than 3 consecutive weeks are allowed; a fourth consecutive week requires department head approval.", "source": "overtime_policy.md"}
+{"id": "q06", "question": "What is the pay rate for weekday overtime?", "ground_truth": "1.5 times the base hourly rate.", "source": "overtime_policy.md"}
+{"id": "q07", "question": "How is overtime on public holidays paid?", "ground_truth": "At 2 times the base hourly rate.", "source": "overtime_policy.md"}
+{"id": "q08", "question": "Are job level 4 employees paid for overtime?", "ground_truth": "No. Employees at job level 4 and above receive compensatory time off instead of overtime pay.", "source": "overtime_policy.md"}
+{"id": "q09", "question": "How long do I have to use comp-off?", "ground_truth": "Comp-off must be used within 30 days of being earned or it lapses.", "source": "overtime_policy.md"}
+{"id": "q10", "question": "What happens after three consecutive weeks of overtime?", "ground_truth": "HR automatically schedules a wellbeing review with the employee and manager within 10 working days.", "source": "overtime_policy.md"}
+{"id": "q11", "question": "How many days of annual leave do employees get?", "ground_truth": "18 days of paid annual leave per calendar year.", "source": "leave_policy.md"}
+{"id": "q12", "question": "At what rate does annual leave accrue?", "ground_truth": "1.5 days per month.", "source": "leave_policy.md"}
+{"id": "q13", "question": "How much annual leave can be carried forward?", "ground_truth": "Up to 10 unused days; anything above 10 lapses on 31 December.", "source": "leave_policy.md"}
+{"id": "q14", "question": "How far in advance must I apply for a week of leave?", "ground_truth": "Leave of more than 3 consecutive days must be applied for at least 7 days in advance.", "source": "leave_policy.md"}
+{"id": "q15", "question": "How many sick days are provided per year?", "ground_truth": "12 days of paid sick leave per year.", "source": "leave_policy.md"}
+{"id": "q16", "question": "When is a medical certificate needed for sick leave?", "ground_truth": "For sick leave longer than 2 consecutive days.", "source": "leave_policy.md"}
+{"id": "q17", "question": "Can unused sick leave be carried forward?", "ground_truth": "No, sick leave cannot be carried forward.", "source": "leave_policy.md"}
+{"id": "q18", "question": "How long is maternity leave?", "ground_truth": "26 weeks of paid maternity leave for birthing parents.", "source": "leave_policy.md"}
+{"id": "q19", "question": "How much paternity leave do non-birthing parents get and when must it be taken?", "ground_truth": "10 working days, taken within 6 months of the child's birth or adoption.", "source": "leave_policy.md"}
+{"id": "q20", "question": "How many bereavement leave days are given?", "ground_truth": "5 days of paid bereavement leave for an immediate family member.", "source": "leave_policy.md"}
+{"id": "q21", "question": "How much unused leave is encashed on exit?", "ground_truth": "Unused annual leave is encashed at base salary up to a maximum of 30 days.", "source": "leave_policy.md"}
+{"id": "q22", "question": "How many days per week are employees expected in the office?", "ground_truth": "3 days per week under the default hybrid model.", "source": "remote_work_policy.md"}
+{"id": "q23", "question": "When does an employee become eligible for hybrid work?", "ground_truth": "After completing the 90-day probation period.", "source": "remote_work_policy.md"}
+{"id": "q24", "question": "Which roles may be exempt from hybrid eligibility?", "ground_truth": "Roles that require on-site equipment, such as laboratory roles.", "source": "remote_work_policy.md"}
+{"id": "q25", "question": "What are the core collaboration hours?", "ground_truth": "11:00 to 16:00 IST.", "source": "remote_work_policy.md"}
+{"id": "q26", "question": "What is the home-office stipend?", "ground_truth": "INR 2,000 per month for eligible hybrid employees, paid with salary.", "source": "remote_work_policy.md"}
+{"id": "q27", "question": "How long can I work remotely from outside India?", "ground_truth": "Up to 14 calendar days per year, with prior approval from the manager and HR business partner.", "source": "remote_work_policy.md"}
+{"id": "q28", "question": "How often are fully remote arrangements re-evaluated?", "ground_truth": "Every 6 months.", "source": "remote_work_policy.md"}
+{"id": "q29", "question": "Who gets stay interviews and how often?", "ground_truth": "Employees rated 4 or 5 in the last cycle get stay interviews twice a year.", "source": "retention_and_exit_policy.md"}
+{"id": "q30", "question": "Who must approve a retention bonus?", "ground_truth": "The HR business partner and the department head jointly.", "source": "retention_and_exit_policy.md"}
+{"id": "q31", "question": "What is the maximum retention bonus?", "ground_truth": "20% of annual base salary.", "source": "retention_and_exit_policy.md"}
+{"id": "q32", "question": "When must a retention bonus be repaid?", "ground_truth": "In full if the employee leaves within 12 months of receiving it.", "source": "retention_and_exit_policy.md"}
+{"id": "q33", "question": "What is the limit on counter-offers?", "ground_truth": "A maximum salary increase of 20%, extended only once per employee.", "source": "retention_and_exit_policy.md"}
+{"id": "q34", "question": "What is the notice period for a job level 2 employee?", "ground_truth": "30 days.", "source": "retention_and_exit_policy.md"}
+{"id": "q35", "question": "What is the notice period for job level 3 and above?", "ground_truth": "60 days.", "source": "retention_and_exit_policy.md"}
+{"id": "q36", "question": "Who conducts exit interviews and when?", "ground_truth": "HR conducts them within the last 5 working days of employment.", "source": "retention_and_exit_policy.md"}
+{"id": "q37", "question": "How are exit interview results reported?", "ground_truth": "Only in aggregate, for groups of at least 5 leavers.", "source": "retention_and_exit_policy.md"}
+{"id": "q38", "question": "When can a former employee be rehired?", "ground_truth": "After 6 months, if they left in good standing.", "source": "retention_and_exit_policy.md"}
+{"id": "q39", "question": "When do annual compensation changes take effect?", "ground_truth": "From 1 April.", "source": "compensation_review_policy.md"}
+{"id": "q40", "question": "What merit increase does a rating of 4 receive?", "ground_truth": "8\u201311%.", "source": "compensation_review_policy.md"}
+{"id": "q41", "question": "What merit increase does a rating of 5 receive?", "ground_truth": "12\u201315%.", "source": "compensation_review_policy.md"}
+{"id": "q42", "question": "Do employees rated 2 get a merit increase?", "ground_truth": "No, ratings of 2 or below receive no merit increase.", "source": "compensation_review_policy.md"}
+{"id": "q43", "question": "What is the minimum increase on promotion?", "ground_truth": "At least 10%, in addition to any merit increase.", "source": "compensation_review_policy.md"}
+{"id": "q44", "question": "Who is eligible for a market adjustment?", "ground_truth": "Employees with a compa-ratio below 0.85, reviewed each October.", "source": "compensation_review_policy.md"}
+{"id": "q45", "question": "Who receives annual stock option refreshes?", "ground_truth": "Employees at job level 4 and above rated 4 or 5.", "source": "compensation_review_policy.md"}
+{"id": "q46", "question": "What gender pay gap triggers remediation?", "ground_truth": "An unexplained gap greater than 3% within the same job level and role must be remediated in the next cycle.", "source": "compensation_review_policy.md"}
+{"id": "q47", "question": "What is the minimum group size for people analytics reports?", "ground_truth": "At least 5 employees; smaller cells are suppressed.", "source": "people_analytics_privacy_policy.md"}
+{"id": "q48", "question": "Can managers see individual attrition risk scores?", "ground_truth": "No, individual-level attrition risk scores are never shown to managers.", "source": "people_analytics_privacy_policy.md"}
+{"id": "q49", "question": "Can attrition scores be used in promotion decisions?", "ground_truth": "No, they must not be used in performance ratings, promotions, compensation decisions or terminations.", "source": "people_analytics_privacy_policy.md"}
+{"id": "q50", "question": "How often are attrition models audited for fairness?", "ground_truth": "Every quarter, across gender and age groups.", "source": "people_analytics_privacy_policy.md"}
+{"id": "q51", "question": "What fairness threshold triggers a model review?", "ground_truth": "An equalized odds difference above 0.10 for any group.", "source": "people_analytics_privacy_policy.md"}
+{"id": "q52", "question": "How long is analytics data retained after an employee leaves?", "ground_truth": "24 months after exit, then deleted.", "source": "people_analytics_privacy_policy.md"}
+{"id": "q53", "question": "Who should privacy questions go to?", "ground_truth": "The Data Protection Officer at privacy@northwind.example.", "source": "people_analytics_privacy_policy.md"}
+{"id": "q54", "question": "How many free counselling sessions does the EAP provide?", "ground_truth": "6 free, confidential counselling sessions per year.", "source": "wellbeing_policy.md"}
+{"id": "q55", "question": "How many mental health days do employees get?", "ground_truth": "2 paid mental health days per year, without a medical certificate.", "source": "wellbeing_policy.md"}
+{"id": "q56", "question": "When is meeting-free time?", "ground_truth": "Friday afternoons after 14:00.", "source": "wellbeing_policy.md"}
+{"id": "q57", "question": "How many consecutive weekends can someone work?", "ground_truth": "No more than 2 consecutive weekends.", "source": "wellbeing_policy.md"}
+{"id": "q58", "question": "What is the company's policy on bringing pets to the office?", "ground_truth": "The policy documents do not cover this.", "source": "_none_"}
+{"id": "q59", "question": "How much is the annual travel allowance for international conferences?", "ground_truth": "The policy documents do not cover this.", "source": "_none_"}
+{"id": "q60", "question": "Which employees in Sales are most likely to quit next month?", "ground_truth": "The policy documents do not cover this.", "source": "_none_"}

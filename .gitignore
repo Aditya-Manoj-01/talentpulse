@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+mlruns/
+mlflow.db
+artifacts/*
+!artifacts/.gitkeep
+data/raw/*
+!data/raw/.gitkeep
+eval/reports/
+redteam/report.json
+*.log
+.env
+.ipynb_checkpoints/

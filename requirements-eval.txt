@@ -1,0 +1,5 @@
+-r requirements/rag.txt
+anthropic>=0.40
+# RAGAS API changes between minor versions; eval/run_eval.py targets the 0.2.x API.
+ragas==0.2.15
+langchain-anthropic>=0.3,<0.4

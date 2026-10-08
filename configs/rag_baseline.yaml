@@ -1,0 +1,9 @@
+# Baseline: large fixed-size chunks, no overlap, shallow retrieval.
+name: baseline
+policies_dir: data/policies
+chunker: fixed          # fixed | markdown
+chunk_size: 1200        # characters
+chunk_overlap: 0
+top_k: 2
+min_score: 0.0
+embedder: sentence-transformers/all-MiniLM-L6-v2   # or "tfidf-lsa" for fully offline runs

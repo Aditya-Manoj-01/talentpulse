@@ -1,0 +1,9 @@
+# Tuned: section-aware chunks with overlap, deeper retrieval, score floor to drop off-topic chunks.
+name: tuned
+policies_dir: data/policies
+chunker: markdown
+chunk_size: 600
+chunk_overlap: 100
+top_k: 4
+min_score: 0.25
+embedder: sentence-transformers/all-MiniLM-L6-v2

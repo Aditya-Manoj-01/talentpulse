@@ -1,0 +1,95 @@
+name: eval-ci
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "data/policies/**"
+      - "configs/**"
+      - "eval/**"
+      - "redteam/**"
+      - "requirements*/**"
+      - "requirements*.txt"
+      - ".github/workflows/eval-ci.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: eval-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONPATH: src:.
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "${{ env.PYTHON_VERSION }}", cache: pip}
+      - run: pip install -r requirements-dev.txt && python -m spacy download en_core_web_lg
+      - run: ruff check src eval redteam loadtest tests
+      - run: pytest -q tests
+
+  guardrails:
+    name: red-team + latency
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "${{ env.PYTHON_VERSION }}", cache: pip}
+      - run: pip install -r requirements-dev.txt && python -m spacy download en_core_web_lg
+      - name: Causal notebook + model training
+        run: |
+          python scripts/build_notebook.py
+          jupyter nbconvert --to notebook --execute --ExecutePreprocessor.timeout=900 \
+            --output-dir artifacts notebooks/01_causal_and_stats.ipynb
+          python -m model_service.train --tracking-uri sqlite:///mlflow.db
+      - name: Start services (offline embedder, no LLM)
+        run: |
+          sed 's#sentence-transformers/all-MiniLM-L6-v2#tfidf-lsa#' configs/rag_tuned.yaml > /tmp/rag_ci.yaml
+          export PYTHONPATH=src
+          nohup uvicorn model_service.api:app --port 8001 > model.log 2>&1 &
+          nohup uvicorn analytics_service.app:app --port 8002 > analytics.log 2>&1 &
+          RAG_CONFIG=/tmp/rag_ci.yaml nohup uvicorn rag_service.app:app --port 8003 > rag.log 2>&1 &
+          nohup uvicorn mcp_server.server:app --port 8000 --workers 2 > gateway.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf localhost:8000/health && curl -sf localhost:8003/health && exit 0; sleep 2; done
+          cat *.log; exit 1
+      - name: Red team (fails on any leak)
+        run: python redteam/run_redteam.py --out redteam/report.json
+      - name: Latency benchmark (1,000 calls; shared runners are noisy, so CI budget is looser than local)
+        run: python loadtest/bench.py --calls 1000 --concurrency 8 --p95-budget-ms 250
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: guardrail-reports
+          path: |
+            redteam/report.json
+            artifacts/*.json
+            artifacts/*.png
+            *.log
+
+  rag-eval:
+    name: RAG faithfulness gate
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    # Secrets are unavailable on fork PRs; skip instead of failing.
+    if: github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'workflow_dispatch'
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      JUDGE_MODEL: ${{ vars.JUDGE_MODEL || 'claude-sonnet-5-5' }}
+      RAG_MODEL: ${{ vars.RAG_MODEL || 'claude-haiku-5-5' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "${{ env.PYTHON_VERSION }}", cache: pip}
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu && pip install -r requirements-eval.txt pandas
+      - name: Baseline config (reported, not gated)
+        run: python eval/run_eval.py --config configs/rag_baseline.yaml --metric judge --threshold 0.0
+      - name: Tuned config (gated)
+        run: python eval/run_eval.py --config configs/rag_tuned.yaml --metric judge --gate faithfulness_judge --threshold 0.90
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: rag-eval-reports, path: eval/reports/}

@@ -1,0 +1,5 @@
+-r requirements/train.txt
+-r requirements/gateway.txt
+-r requirements/rag.txt
+pytest>=8.2
+ruff>=0.6

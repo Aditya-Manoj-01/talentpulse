@@ -1,0 +1,115 @@
+# TalentPulse: 4 FastAPI services + MLflow + a one-shot trainer.
+#   docker compose up --build          (first run trains models and computes causal results, ~3 min)
+x-app: &app
+  build: &build
+    context: .
+    dockerfile: docker/Dockerfile
+  environment: &env
+    ARTIFACTS_DIR: /app/artifacts
+    HR_DATA_PATH: /app/data/raw/WA_Fn-UseC_-HR-Employee-Attrition.csv
+  volumes:
+    - ./artifacts:/app/artifacts
+    - ./data/raw:/app/data/raw
+  restart: unless-stopped
+
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest   # pin a version tag for reproducible builds
+    command: >
+      mlflow server --host 0.0.0.0 --port 5000
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --artifacts-destination /mlflow/artifacts --serve-artifacts
+    ports: ["5000:5000"]
+    volumes: ["mlflow-data:/mlflow"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 10s
+      retries: 12
+
+  trainer:
+    <<: *app
+    build:
+      <<: *build
+      args: {REQUIREMENTS: requirements/train.txt}
+    environment:
+      <<: *env
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    command: >
+      bash -c "python scripts/build_notebook.py &&
+               jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=900
+               notebooks/01_causal_and_stats.ipynb &&
+               python -m model_service.train --tracking-uri http://mlflow:5000"
+    restart: "no"
+    depends_on:
+      mlflow: {condition: service_healthy}
+
+  model-service:
+    <<: *app
+    build:
+      <<: *build
+      args: {REQUIREMENTS: requirements/model.txt}
+    command: uvicorn model_service.api:app --host 0.0.0.0 --port 8001 --workers 2
+    ports: ["8001:8001"]
+    depends_on:
+      trainer: {condition: service_completed_successfully}
+    healthcheck: &hc
+      test: ["CMD", "curl", "-sf", "http://localhost:8001/health"]
+      interval: 10s
+      retries: 10
+
+  analytics-service:
+    <<: *app
+    build:
+      <<: *build
+      args: {REQUIREMENTS: requirements/analytics.txt}
+    command: uvicorn analytics_service.app:app --host 0.0.0.0 --port 8002 --workers 2
+    ports: ["8002:8002"]
+    depends_on:
+      trainer: {condition: service_completed_successfully}
+    healthcheck:
+      <<: *hc
+      test: ["CMD", "curl", "-sf", "http://localhost:8002/health"]
+
+  rag-service:
+    <<: *app
+    build:
+      <<: *build
+      args:
+        REQUIREMENTS: requirements/rag.txt
+        TORCH_CPU: "true"
+        ST_MODEL: sentence-transformers/all-MiniLM-L6-v2
+    environment:
+      <<: *env
+      RAG_CONFIG: /app/configs/rag_tuned.yaml
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      RAG_MODEL: ${RAG_MODEL:-claude-haiku-5-5}
+    command: uvicorn rag_service.app:app --host 0.0.0.0 --port 8003
+    ports: ["8003:8003"]
+    healthcheck:
+      <<: *hc
+      test: ["CMD", "curl", "-sf", "http://localhost:8003/health"]
+      start_period: 30s
+
+  mcp-gateway:
+    <<: *app
+    build:
+      <<: *build
+      args: {REQUIREMENTS: requirements/gateway.txt, SPACY_MODEL: en_core_web_lg}
+    environment:
+      <<: *env
+      MODEL_SERVICE_URL: http://model-service:8001
+      ANALYTICS_SERVICE_URL: http://analytics-service:8002
+      RAG_SERVICE_URL: http://rag-service:8003
+      PRESIDIO_SPACY_MODEL: en_core_web_lg
+    command: uvicorn mcp_server.server:app --host 0.0.0.0 --port 8000 --workers 4
+    ports: ["8000:8000"]
+    depends_on:
+      model-service: {condition: service_healthy}
+      analytics-service: {condition: service_healthy}
+      rag-service: {condition: service_healthy}
+    healthcheck:
+      <<: *hc
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/health"]
+
+volumes:
+  mlflow-data:
